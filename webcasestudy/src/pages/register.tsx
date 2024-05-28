@@ -13,9 +13,11 @@ const Register: React.FC<{}> = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState(""); // Add confirmPassword state
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState(""); // Add confirmPasswordError state
 
   const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -48,6 +50,14 @@ const Register: React.FC<{}> = () => {
     }
   };
 
+  const handleConfirmPasswordBlur = () => { // Function to handle confirm password blur
+    if (confirmPassword !== password) {
+      setConfirmPasswordError("Passwords do not match.");
+    } else {
+      setConfirmPasswordError("");
+    }
+  };
+
   const handleRegister = async () => {
     let valid = true;
 
@@ -70,6 +80,13 @@ const Register: React.FC<{}> = () => {
       valid = false;
     } else {
       setPasswordError("");
+    }
+
+    if (confirmPassword !== password) {
+      setConfirmPasswordError("Passwords do not match.");
+      valid = false;
+    } else {
+      setConfirmPasswordError("");
     }
 
     if (valid) {
@@ -132,6 +149,19 @@ const Register: React.FC<{}> = () => {
                 onBlur={handlePasswordBlur}
               />
               {passwordError && <Form.Control.Feedback type="invalid">{passwordError}</Form.Control.Feedback>}
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formBasicConfirmPassword"> {/* Add confirmPassword form group */}
+              <Form.Label>Confirm Password</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                isInvalid={!!confirmPasswordError}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                onBlur={handleConfirmPasswordBlur}
+              />
+              {confirmPasswordError && <Form.Control.Feedback type="invalid">{confirmPasswordError}</Form.Control.Feedback>}
             </Form.Group>
 
             <Button variant="primary" type="button" onClick={handleRegister} className="w-100">
