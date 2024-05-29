@@ -27,7 +27,7 @@ type DebtState = {
 };
 
 const initialState: DebtState = {
-  debts: JSON.parse(localStorage.getItem("debts") || "[]"),
+  debts: [],
   selectedDebt: undefined,
   status: "idle",
   error: null,
@@ -69,15 +69,15 @@ export const fetchDebts = createAsyncThunk("finance/fetchDebts", async () => {
 export const fetchDebtById = createAsyncThunk(
   "finance/fetchDebtById",
   async (id: string) => {
-    const response = await axiosInstance.get(`/finance/debt/${id}`);
+    const response = await axiosInstance.get(`finance/debt/${id}`);
     return response.data;
   }
 );
 
 export const createDebt = createAsyncThunk(
-  "finance/createDebt",
-  async (debt: Debt) => {
-    const response = await axiosInstance.post("/finance/debt", debt);
+  "finance/debt",
+  async (debt: any) => {
+    const response = await axiosInstance.post("finance/debt", debt);
     return response.data;
   }
 );
@@ -85,7 +85,7 @@ export const createDebt = createAsyncThunk(
 export const updateDebt = createAsyncThunk(
   "finance/updateDebt",
   async ({ id, debt }: { id: string; debt: Debt }) => {
-    const response = await axiosInstance.put(`/finance/debt/${id}`, debt);
+    const response = await axiosInstance.put(`finance/debt/${id}`, debt);
     return response.data;
   }
 );
@@ -108,7 +108,9 @@ export const fetchPaymentPlan = createAsyncThunk(
 
 export const updatePaymentPlan = createAsyncThunk(
   "finance/updatePaymentPlan",
-  async ({ id, paymentPlan }: { id: string; paymentPlan: PaymentPlan }) => {
+  async ({ id, paymentPlan }: { id: string; paymentPlan: any }) => {
+    console.log(paymentPlan)
+    console.log(id)
     const response = await axiosInstance.put(
       `/finance/payment-plans/${id}`,
       paymentPlan

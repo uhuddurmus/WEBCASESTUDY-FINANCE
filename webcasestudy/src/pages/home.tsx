@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchDebts } from "../redux/slices/debtSlice";
 import { RootState } from "../redux/store";
 import { ToastContainer, toast } from "react-toastify";
-import DebtList from "../components/DebtList";
 import DebtStatistics from "../components/DebtStatistics";
 import { useNavigate } from "react-router-dom";
 
@@ -29,20 +28,20 @@ const Home: React.FC = () => {
   if (status === "loading") {
     toast.info("loading");
     return (
-      <>
+      < div className="card">
         <ToastContainer />
         Loading . . .
-      </>
+      </div>
     );
   }
 
   if (status === "failed") {
     toast.error("Getting usser data is failed please log out and try again");
     return (
-      <>
+      < div className="card">
         <ToastContainer />
         "Getting usser data is failed please log out and try again"
-      </>
+      </div>
     );
   }
 
