@@ -5,6 +5,7 @@ import { RootState } from "../redux/store";
 import { ToastContainer, toast } from "react-toastify";
 import DebtStatistics from "../components/DebtStatistics";
 import { useNavigate } from "react-router-dom";
+import CircularIndeterminate from "../components/Loading";
 
 const Home: React.FC = () => {
   const nav = useNavigate()
@@ -28,17 +29,17 @@ const Home: React.FC = () => {
   if (status === "loading") {
     toast.info("loading");
     return (
-      < div className="card">
-        <ToastContainer />
-        Loading . . .
-      </div>
+      <div className="row" style={{position:'fixed',top:'50%',left:'50%'}}>
+      <ToastContainer />
+      <CircularIndeterminate/>
+    </div>
     );
   }
 
   if (status === "failed") {
     toast.error("Getting usser data is failed please log out and try again");
     return (
-      < div className="card">
+      <div className="card" >
         <ToastContainer />
         "Getting usser data is failed please log out and try again"
       </div>
@@ -48,7 +49,7 @@ const Home: React.FC = () => {
 
   return (
     <div>
-      <div className="d-flex justify-content-end">
+      <div className="d-flex justify-content-end mt-5">
         <button onClick={goList} className="btn bg-success text-white h5 float-right me-3 bg-success bg-opacity-75">
           {" "}
           Go To List

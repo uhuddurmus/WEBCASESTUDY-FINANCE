@@ -8,6 +8,7 @@ import { RootState } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import AddNewDebt from "../components/AddNewDebt";
+import CircularIndeterminate from "../components/Loading";
 
 const List: React.FC<any> = () => {
   const nav = useNavigate();
@@ -31,10 +32,10 @@ const List: React.FC<any> = () => {
   if (status === "loading") {
     toast.info("loading");
     return (
-      <div className="card">
-        <ToastContainer />
-        Loading . . .
-      </div>
+      <div className="row" style={{position:'fixed',top:'50%',left:'50%'}}>
+      <ToastContainer />
+      <CircularIndeterminate/>
+    </div>
     );
   }
 

@@ -6,9 +6,10 @@ const DebtList = (debts: any) => {
   if (!Array.isArray(debts.debts)) {
     return <></>;
   }
+  console.log("debt",debts)
   return (
-    <div className="section">
-      <div className="row card" style={{ overflow: "hidden" }}>
+    <div className="" id="scrollstyle" style={{overflowY:'scroll',height:'720px'}}>
+      <div className="row card" style={{  height:'720px'}}>
         <div className="d-flex p-4 justify-content-between bg-secondary bg-opacity-25 align-items-center ">
           <div className="col-md-1">#</div>
           <div className="col-md-1 h6">Debt Name</div>
@@ -81,7 +82,7 @@ const DebtList = (debts: any) => {
               <div
                 className={
                   clicked == debt.id
-                    ? "row d-flex justify-content-between align-items-center "
+                    ? "d-flex p-4 justify-content-between align-items-center "
                     : "d-none"
                 }
               >
@@ -94,8 +95,9 @@ const DebtList = (debts: any) => {
                   <hr className="pt-2 mt-2" />
                 </div>
                 {debt?.paymentPlan?.map((plan: any, index: any) => {
+                  console.log("plan ",plan)
                   return (
-                    <div className="row mb-1">
+                    <div className="row">
                       <div className="col-3 text-center">
                         {plan.paymentDate?.slice(0, 10)}
                       </div>
