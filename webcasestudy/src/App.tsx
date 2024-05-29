@@ -14,7 +14,6 @@ import { Container } from "react-bootstrap";
 function App() {
   const userProfileData = useAppSelector((state) => state.auth.userProfileData);
   const basicUserInfo = useAppSelector((state) => state.auth.basicUserInfo);
-
   return (
     <>
       <Header />
