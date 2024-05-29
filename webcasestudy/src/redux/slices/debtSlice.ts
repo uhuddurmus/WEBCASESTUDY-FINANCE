@@ -16,7 +16,7 @@ type Debt = {
   paymentStart: string;
   installment: number;
   description: string;
-  paymentPlan: PaymentPlan[];
+  paymentPlan: any[];
 };
 
 type DebtState = {
@@ -27,16 +27,44 @@ type DebtState = {
 };
 
 const initialState: DebtState = {
-  debts: [],
+  debts: JSON.parse(localStorage.getItem("debts") || "[]"),
   selectedDebt: undefined,
   status: "idle",
   error: null,
 };
 
 export const fetchDebts = createAsyncThunk("finance/fetchDebts", async () => {
+  function UpdateDebts(debts: any) {
+    return debts.map((debt: any) => {
+      let lastDebt = debt.amount;
+      debt.paymentPlan.forEach((paymentPlan: any) => {
+        if (paymentPlan.isPaid) {
+          lastDebt -= paymentPlan.paymentAmount;
+        }
+      });
+      return {
+        ...debt,
+        lastDebt: lastDebt
+      };
+    });
+  }
+
   const response = await axiosInstance.get("/finance/debt");
-  return response.data;
+  
+  const promises = response.data.data.map(async (item: any) => {
+    const datapaymentPlan = await axiosInstance.get(`/finance/payment-plans/${item.id}`);
+    return {
+      ...item,
+      paymentPlan: datapaymentPlan.data.data
+    };
+  });
+
+  const product = await Promise.all(promises);
+  const results = UpdateDebts(product);
+
+  return results;
 });
+
 
 export const fetchDebtById = createAsyncThunk(
   "finance/fetchDebtById",
@@ -67,6 +95,25 @@ export const deleteDebt = createAsyncThunk(
   async (id: string) => {
     await axiosInstance.delete(`/finance/debt/${id}`);
     return id;
+  }
+);
+
+export const fetchPaymentPlan = createAsyncThunk(
+  "finance/fetchPaymentPlan",
+  async (id: string) => {
+    const response = await axiosInstance.get(`/finance/payment-plans/${id}`);
+    return response.data;
+  }
+);
+
+export const updatePaymentPlan = createAsyncThunk(
+  "finance/updatePaymentPlan",
+  async ({ id, paymentPlan }: { id: string; paymentPlan: PaymentPlan }) => {
+    const response = await axiosInstance.put(
+      `/finance/payment-plans/${id}`,
+      paymentPlan
+    );
+    return response.data;
   }
 );
 
@@ -144,6 +191,35 @@ const debtSlice = createSlice({
       .addCase(deleteDebt.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message || "Deleting debt failed";
+      })
+      .addCase(fetchPaymentPlan.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(
+        fetchPaymentPlan.fulfilled,
+        (state, action: PayloadAction<PaymentPlan>) => {
+          state.status = "idle";
+          // Burada ne yapmak istediğinize göre state'i güncelleyebilirsiniz
+        }
+      )
+      .addCase(fetchPaymentPlan.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message || "Fetching payment plan failed";
+      })
+
+      .addCase(updatePaymentPlan.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(
+        updatePaymentPlan.fulfilled,
+        (state, action: PayloadAction<PaymentPlan>) => {
+          state.status = "idle";
+          // Burada ne yapmak istediğinize göre state'i güncelleyebilirsiniz
+        }
+      )
+      .addCase(updatePaymentPlan.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message || "Updating payment plan failed";
       });
   },
 });

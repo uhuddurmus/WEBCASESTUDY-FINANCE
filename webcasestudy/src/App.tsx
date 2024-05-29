@@ -7,10 +7,13 @@ import {
 } from "react-router-dom";
 import { useAppSelector } from "./redux/redux-hooks";
 import Home from "./pages/home";
-import Login from "./pages/login";
-import Register from "./pages/register";
+import Login from "./pages/Auth/login";
+import Register from "./pages/Auth/register";
 import Header from "./Layout/Navbar";
 import { Container } from "react-bootstrap";
+import axiosInstance from "./api/axiosInstance";
+import"./app.css"
+import List from "./pages/List";
 function App() {
   const userProfileData = useAppSelector((state) => state.auth.userProfileData);
   const basicUserInfo = useAppSelector((state) => state.auth.basicUserInfo);
@@ -21,6 +24,7 @@ function App() {
       {basicUserInfo || userProfileData ? (
         <Router>
           <Routes>
+          <Route path="/list" element={<List />} />
             <Route path="/home" element={<Home />} />
             <Route path="*" element={<Navigate to="/home" />} />
           </Routes>

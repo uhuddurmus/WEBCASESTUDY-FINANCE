@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useAppDispatch } from "../redux/redux-hooks";
-import { register } from "../redux/slices/authSlice";
+import { useAppDispatch } from "../../redux/redux-hooks";
+import { register } from "../../redux/slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { Card, Form, Button } from "react-bootstrap";
 import { ToastContainer, toast } from 'react-toastify';
@@ -108,7 +108,7 @@ const Register: React.FC<{}> = () => {
 
   return (
     <div className="d-flex justify-content-center align-items-center min-vh-100">
-      <Card style={{ width: '18rem' }} className="p-3">
+      <Card style={{ width: '18rem' }} className="p-3 bg-white bg-opacity-75">
         <Card.Body>
           <Card.Title className="text-center mb-3">Register</Card.Title>
           <Form>
