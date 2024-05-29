@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import axiosInstance from "../../api/axiosInstance";
+import axiosInstanceLogin from "../../api/axiosInstanceLogin";
 
 type User = {
   email: string;
@@ -11,6 +11,8 @@ type NewUser = User & {
 };
 
 type UserBasicInfo = {
+  resData?:any;
+  data?:any;
   email: string;
 };
 
@@ -35,7 +37,7 @@ const initialState: AuthApiState = {
 };
 
 export const login = createAsyncThunk("login", async (data: User) => {
-  const response = await axiosInstance.post("/auth/login", data);
+  const response = await axiosInstanceLogin.post("auth/login", data);
   const resData = response.data;
 
   localStorage.setItem("userInfo", JSON.stringify({resData,data}));
@@ -44,7 +46,7 @@ export const login = createAsyncThunk("login", async (data: User) => {
 });
 
 export const register = createAsyncThunk("register", async (data: NewUser) => {
-  const response = await axiosInstance.post(
+  const response = await axiosInstanceLogin.post(
     "/auth/register",
     data
   );
